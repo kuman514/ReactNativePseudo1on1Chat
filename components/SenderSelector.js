@@ -1,21 +1,22 @@
-import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
-  Pressable,
-  TextInput
+  Pressable
 } from 'react-native';
 
 export default function SenderSelector() {
   return (
     <View style={styles.senderSelector}>
-      <Pressable>
-        <Text>Opponent</Text>
+      <Pressable style={styles.selectorButton}>
+        <Text style={styles.selectorText}>
+          Opponent
+        </Text>
       </Pressable>
-      <Pressable>
-        <Text>You</Text>
+      <Pressable style={styles.selectorButton}>
+        <Text style={styles.selectorText}>
+          You
+        </Text>
       </Pressable>
     </View>
   );
@@ -23,6 +24,16 @@ export default function SenderSelector() {
 
 const styles = StyleSheet.create({
   senderSelector: {
-
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    backgroundColor: 'white'
+  },
+  selectorButton: {
+    marginHorizontal: 10,
+    marginVertical: 10
+  },
+  selectorText: {
+    fontSize: 24
   }
 });
