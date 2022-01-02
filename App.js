@@ -20,8 +20,6 @@ export default function App() {
         <ChatList />
         <ChatManager />
         <SenderSelector />
-
-        <StatusBar style="auto" />
       </View>
     </Provider>
   );
@@ -30,7 +28,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'lightblue',
     alignItems: 'center',
     justifyContent: 'center',
   }
