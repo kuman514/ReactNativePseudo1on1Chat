@@ -1,42 +1,44 @@
-import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
-  Text,
   View,
-  ScrollView,
   Pressable,
   TextInput
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function ChatManager() {
   return (
     <View style={styles.chatManager}>
-      <Pressable style={styles.modeButton}>
-        <Text>Update Mode</Text>
+      <Pressable style={styles.button}>
+        <Ionicons name="build-outline" size={36} color="black" />
       </Pressable>
-      <Pressable style={styles.modeButton}>
-        <Text>Delete Mode</Text>
+      <Pressable style={styles.button}>
+        <Ionicons name="trash-outline" size={36} color="black" />
       </Pressable>
-      <View style={styles.chatInput}>
-        <TextInput
-          placeholder='Enter a chat.'
-        />
-        <Pressable>
-          <Text>Send</Text>
-        </Pressable>
-      </View>
+      <TextInput
+        style={styles.chatInput}
+        placeholder="Enter a chat."
+      />
+      <Pressable style={styles.button}>
+        <FontAwesome name="send-o" size={36} color="black" />
+      </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   chatManager: {
-
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    backgroundColor: 'white'
   },
-  modeButton: {
-
+  button: {
+    marginHorizontal: 8,
+    marginVertical: 8
   },
   chatInput: {
-
+    flex: 1
   }
 });
