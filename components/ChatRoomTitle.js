@@ -1,23 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
   Text,
-  View,
-  ScrollView,
-  Pressable,
-  TextInput
+  View
 } from 'react-native';
 
 export default function ChatRoomTitle() {
   return (
     <View style={styles.chatRoomTitle}>
-      <Text>Chat Room Title</Text>
+      <Text style={styles.titleFont}>
+        Chat Room Title
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   chatRoomTitle: {
-
+    backgroundColor: 'brown',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    flexDirection: 'row',
+    alignSelf: 'stretch'
+  },
+  titleFont: {
+    fontSize: 24,
+    color: 'white'
   }
 });
