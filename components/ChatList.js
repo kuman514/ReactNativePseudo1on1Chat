@@ -11,13 +11,17 @@ export default function ChatList() {
   return (
     <ScrollView style={styles.chatList}>
       <View style={styles.chatCommon}>
-        <View style={styles.yourChat}>
+        <View style={
+          tmpYourStyle ? styles.yourChat : styles.opponentChat
+        }>
           <Text style={styles.name}>
             You
           </Text>
         </View>
         
-        <View style={styles.yourChat}>
+        <View style={
+          tmpYourStyle ? styles.yourChat : styles.opponentChat
+        }>
           <View style={{
             ...styles.message,
             ...(tmpYourStyle ? styles.yourMessage : styles.opponentMessage)
