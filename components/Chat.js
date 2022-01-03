@@ -3,33 +3,64 @@ import {
   Text,
   View
 } from 'react-native';
+import { useSelector } from 'react-redux';
 
-export default function Chat() {
-  const tmpYourStyle = true;
+const MONTHS = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+];
+
+export default function Chat(props) {
+  /*
+    Chat props
+    - id: string
+  */
+
+  const msgSelector = (state) => {
+    return state.messages[props.id];
+  };
+  const message = useSelector(msgSelector);
+  const areYouSender = (message.sender === 'you');
+  const sentDate = new Date(message.timestamp);
+  const [year, month, day, hour, minute, second] = [
+    sentDate.getFullYear(),
+    sentDate.getMonth(),
+    sentDate.getDate(),
+    String(sentDate.getHours()).padStart(2, '0'),
+    String(sentDate.getMinutes()).padStart(2, '0'),
+    String(sentDate.getSeconds()).padStart(2, '0')
+  ];
+
+  const senderNameSelector = (state) => {
+    return (areYouSender ? state.yourName : state.opponentName);
+  };
+  const name = useSelector(senderNameSelector);
 
   return (
     <View style={styles.chatCommon}>
       <View style={
-        tmpYourStyle ? styles.yourChat : styles.opponentChat
+        areYouSender ? styles.yourChat : styles.opponentChat
       }>
         <Text style={styles.name}>
-          You
+          { name }
         </Text>
       </View>
       
       <View style={
-        tmpYourStyle ? styles.yourChat : styles.opponentChat
+        areYouSender ? styles.yourChat : styles.opponentChat
       }>
         <View style={{
           ...styles.message,
-          ...(tmpYourStyle ? styles.yourMessage : styles.opponentMessage)
+          ...(areYouSender ? styles.yourMessage : styles.opponentMessage)
         }}>
           <Text style={styles.messageText}>
-            Your Message
+            { message.message }
           </Text>
         </View>
         <View style={styles.timestamp}>
-          <Text>Timestamp</Text>
+          <Text>
+            { `${MONTHS[month]} ${day} ${year}, ${hour}:${minute}:${second}` }
+          </Text>
         </View>
       </View>
     </View>
