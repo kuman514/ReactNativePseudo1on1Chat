@@ -1,9 +1,14 @@
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  Pressable
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import {
+  useSelector,
+  useDispatch
+} from 'react-redux';
+import { Ionicons } from '@expo/vector-icons';
 
 const MONTHS = [
   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -15,6 +20,8 @@ export default function Chat(props) {
     Chat props
     - id: string
   */
+
+  const dispatch = useDispatch();
 
   const msgSelector = (state) => {
     return state.messages[props.id];
@@ -35,6 +42,45 @@ export default function Chat(props) {
     return (areYouSender ? state.yourName : state.opponentName);
   };
   const name = useSelector(senderNameSelector);
+
+  const modeSelector = (state) => {
+    return state.currentMode;
+  };
+  const currentMode = useSelector(modeSelector);
+  const renderModeIcon = (mode, key) => {
+    switch (mode) {
+      case 'UPDATE':
+        return (
+          <View />
+        );
+      case 'DELETE':
+        return (
+          <Pressable
+            style={
+              areYouSender ? styles.yourChat : styles.opponentChat
+            }
+            onPress={() => {
+              dispatch({
+                type: 'DELETE-MESSAGE',
+                payload: {
+                  key: key
+                }
+              });
+            }}
+          >
+            <Ionicons
+              name="trash-outline"
+              size={24}
+              color="black"
+            />
+          </Pressable>
+        );
+      default:
+        return (
+          <View />
+        );
+    }
+  };
 
   return (
     <View style={styles.chatCommon}>
@@ -61,6 +107,9 @@ export default function Chat(props) {
           <Text>
             { `${MONTHS[month]} ${day} ${year}, ${hour}:${minute}:${second}` }
           </Text>
+          {
+            renderModeIcon(currentMode, props.id)
+          }
         </View>
       </View>
     </View>

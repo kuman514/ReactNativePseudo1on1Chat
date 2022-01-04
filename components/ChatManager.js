@@ -7,7 +7,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function ChatManager() {
   const [status, setStatus] = useState({
@@ -38,13 +38,63 @@ export default function ChatManager() {
     });
   };
 
+  const onChangeMode = (mode) => {
+    dispatch({
+      type: 'CHANGE-MODE',
+      payload: {
+        newMode: mode
+      }
+    });
+  };
+
+  const updateModeSelector = (state) => {
+    return (state.currentMode === 'UPDATE');
+  };
+  
+  const deleteModeSelector = (state) => {
+    return (state.currentMode === 'DELETE');
+  };
+
+  const isUpdateActive = useSelector(updateModeSelector);
+  const isDeleteActive = useSelector(deleteModeSelector);
+
   return (
     <View style={styles.chatManager}>
-      <Pressable style={styles.button}>
-        <Ionicons name="build-outline" size={36} color="black" />
+      <Pressable
+        style={styles.button}
+        onPress={
+          isUpdateActive ? () => {
+            onChangeMode('CREATE');
+          } : () => {
+            onChangeMode('UPDATE');
+          }
+        }
+      >
+        <Ionicons
+          name="build-outline"
+          size={36}
+          color={
+            isUpdateActive ? 'black' : '#CCCCCC'
+          }
+        />
       </Pressable>
-      <Pressable style={styles.button}>
-        <Ionicons name="trash-outline" size={36} color="black" />
+      <Pressable
+        style={styles.button}
+        onPress={
+          isDeleteActive ? () => {
+            onChangeMode('CREATE');
+          } : () => {
+            onChangeMode('DELETE');
+          }
+        }
+      >
+        <Ionicons
+          name="trash-outline"
+          size={36}
+          color={
+            isDeleteActive ? 'black' : '#CCCCCC'
+          }
+        />
       </Pressable>
       <TextInput
         style={styles.chatInput}
