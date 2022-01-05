@@ -2,13 +2,15 @@ import {
   StyleSheet,
   Text,
   View,
-  Pressable
+  Pressable,
+  TextInput
 } from 'react-native';
 import {
   useSelector,
   useDispatch
 } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
+import { useEffect, useState } from 'react';
 
 const MONTHS = [
   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -23,6 +25,7 @@ export default function Chat(props) {
 
   const dispatch = useDispatch();
 
+  // Get message
   const msgSelector = (state) => {
     return state.messages[props.id];
   };
@@ -38,11 +41,54 @@ export default function Chat(props) {
     String(sentDate.getSeconds()).padStart(2, '0')
   ];
 
+  // Declare message text for editing
+  const [status, setStatus] = useState({
+    editText: message.message
+  });
+
+  // Get the sender's name
   const senderNameSelector = (state) => {
     return (areYouSender ? state.yourName : state.opponentName);
   };
   const name = useSelector(senderNameSelector);
 
+  // Update functions
+  const onChangeText = (payload) => {
+    setStatus({
+      editText: payload
+    });
+  };
+  const updateMessage = (key, changedMessage) => {
+    dispatch({
+      type: 'UPDATE-MESSAGE',
+      payload: {
+        newMessage: {
+          key: key,
+          message: changedMessage
+        }
+      }
+    });
+    setStatus({
+      editText: changedMessage
+    });
+  };
+  const resetText = () => {
+    setStatus({
+      editText: message.message
+    });
+  };
+
+  // Delete this message
+  const deleteMessage = (key) => {
+    dispatch({
+      type: 'DELETE-MESSAGE',
+      payload: {
+        key: key
+      }
+    });
+  };
+
+  // Get mode for rendering a mode button
   const modeSelector = (state) => {
     return state.currentMode;
   };
@@ -51,7 +97,20 @@ export default function Chat(props) {
     switch (mode) {
       case 'UPDATE':
         return (
-          <View />
+          <Pressable
+            style={
+              areYouSender ? styles.yourChat : styles.opponentChat
+            }
+            onPress={() => {
+              updateMessage(key, status.editText);
+            }}
+          >
+            <Ionicons
+              name="build-outline"
+              size={24}
+              color="black"
+            />
+          </Pressable>
         );
       case 'DELETE':
         return (
@@ -60,12 +119,7 @@ export default function Chat(props) {
               areYouSender ? styles.yourChat : styles.opponentChat
             }
             onPress={() => {
-              dispatch({
-                type: 'DELETE-MESSAGE',
-                payload: {
-                  key: key
-                }
-              });
+              deleteMessage(key);
             }}
           >
             <Ionicons
@@ -81,6 +135,14 @@ export default function Chat(props) {
         );
     }
   };
+
+  //console.log(message);
+
+  useEffect(() => {
+    if (currentMode !== 'UPDATE' && status.editText !== message.message) {
+      resetText();
+    }
+  });
 
   return (
     <View style={styles.chatCommon}>
@@ -99,9 +161,25 @@ export default function Chat(props) {
           ...styles.message,
           ...(areYouSender ? styles.yourMessage : styles.opponentMessage)
         }}>
-          <Text style={styles.messageText}>
-            { message.message }
-          </Text>
+          {
+            currentMode === 'UPDATE' ? (
+              <TextInput
+                style={{
+                  ...styles.messageText,
+                  ...styles.editText
+                }}
+                value={status.editText}
+                onChangeText={onChangeText}
+                onSubmitEditing={() => {
+                  updateMessage(props.id, status.editText);
+                }}
+              />
+            ) : (
+              <Text style={styles.messageText}>
+                { message.message }
+              </Text>
+            )
+          }
         </View>
         <View style={styles.timestamp}>
           <Text>
@@ -132,6 +210,9 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontSize: 20
+  },
+  editText: {
+    textDecorationLine: 'underline'
   },
   timestamp: {
     flexDirection: 'column-reverse'
