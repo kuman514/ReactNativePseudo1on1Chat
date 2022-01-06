@@ -2,7 +2,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Pressable
+  Pressable,
+  Platform
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -25,8 +26,25 @@ export default function SenderSelector() {
     });
   };
 
-  const changeName = () => {
-
+  const changeName = (who, newName) => {
+    switch (who) {
+      case 'you':
+        dispatch({
+          type: 'CHANGE-YOUR-NAME',
+          payload: {
+            newName: newName
+          }
+        });
+        break;
+      case 'opponent':
+        dispatch({
+          type: 'CHANGE-OPPONENT-NAME',
+          payload: {
+            newName: newName
+          }
+        });
+        break;
+    }
   };
 
   return (
