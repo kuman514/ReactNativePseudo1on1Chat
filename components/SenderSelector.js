@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 export default function SenderSelector() {
   const dispatch = useDispatch();
   
+  // Get current sender
   const curSenderSelector = (state) => {
     return state.currentSender;
   };
@@ -17,6 +18,13 @@ export default function SenderSelector() {
   const areYouActive = (curSender === 'you');
   const isOpponentActive = (curSender === 'opponent');
 
+  // Get mode for rendering edit
+  const modeSelector = (state) => {
+    return state.currentMode;
+  };
+  const currentMode = useSelector(modeSelector);
+
+  // Switch the current sender
   const convertSender = (who) => {
     dispatch({
       type: 'CHANGE-SENDER',
@@ -26,6 +34,7 @@ export default function SenderSelector() {
     });
   };
 
+  // Dispatch changing target's name
   const changeName = (who, newName) => {
     switch (who) {
       case 'you':
@@ -47,34 +56,72 @@ export default function SenderSelector() {
     }
   };
 
+  // TODO: Implement and apply update mode views
   return (
     <View style={styles.senderSelector}>
-      <Pressable
-        style={styles.selectorButton}
-        onPress={() => {
-          convertSender('opponent');
-        }}
-      >
-        <Text style={{
-          ...styles.selectorText,
-          ...(isOpponentActive ? styles.active : {})
-        }}>
-          Opponent
-        </Text>
-      </Pressable>
-      <Pressable
-        style={styles.selectorButton}
-        onPress={() => {
-          convertSender('you');
-        }}
-      >
-        <Text style={{
-          ...styles.selectorText,
-          ...(areYouActive ? styles.active : {})
-        }}>
-          You
-        </Text>
-      </Pressable>
+      {
+        (currentMode === 'UPDATE') ? (
+          <Pressable
+            style={styles.selectorButton}
+            onPress={() => {
+              convertSender('opponent');
+            }}
+          >
+            <Text style={{
+              ...styles.selectorText,
+              ...(isOpponentActive ? styles.active : {})
+            }}>
+              Opponent
+            </Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            style={styles.selectorButton}
+            onPress={() => {
+              convertSender('opponent');
+            }}
+          >
+            <Text style={{
+              ...styles.selectorText,
+              ...(isOpponentActive ? styles.active : {})
+            }}>
+              Opponent
+            </Text>
+          </Pressable>
+        )
+      }
+
+      {
+        (currentMode === 'UPDATE') ? (
+          <Pressable
+            style={styles.selectorButton}
+            onPress={() => {
+              convertSender('you');
+            }}
+          >
+            <Text style={{
+              ...styles.selectorText,
+              ...(areYouActive ? styles.active : {})
+            }}>
+              You
+            </Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            style={styles.selectorButton}
+            onPress={() => {
+              convertSender('you');
+            }}
+          >
+            <Text style={{
+              ...styles.selectorText,
+              ...(areYouActive ? styles.active : {})
+            }}>
+              You
+            </Text>
+          </Pressable>
+        )
+      }
     </View>
   );
 }
