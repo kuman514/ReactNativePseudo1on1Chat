@@ -1,9 +1,10 @@
+import { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   Pressable,
-  Platform
+  TextInput
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -34,8 +35,37 @@ export default function SenderSelector() {
     });
   };
 
-  // Dispatch changing target's name
-  const changeName = (who, newName) => {
+  // Get senders' names
+  const senderNameSelector = (state) => {
+    return {
+      opponentName: state.opponentName,
+      yourName: state.yourName
+    };
+  };
+  const senderNames = useSelector(senderNameSelector);
+  const [status, setStatus] = useState({
+    opponentEditName: senderNames.opponentName,
+    yourEditName: senderNames.yourName
+  });
+
+  // Update functions
+  const onChangeText = (who, payload) => {
+    switch (who) {
+      case 'you':
+        setStatus({
+          ...status,
+          yourEditName: payload
+        });
+        break;
+      case 'opponent':
+        setStatus({
+          ...status,
+          opponentEditName: payload
+        });
+        break;
+    }
+  };
+  const updateName = (who, newName) => {
     switch (who) {
       case 'you':
         dispatch({
@@ -55,25 +85,41 @@ export default function SenderSelector() {
         break;
     }
   };
+  const resetName = () => {
+    setStatus({
+      opponentEditName: senderNames.opponentName,
+      yourEditName: senderNames.yourName
+    });
+  };
+
+  useEffect(() => {
+    if (
+      currentMode !== 'UPDATE' && (
+        status.opponentEditName !== senderNames.opponentName || 
+        status.yourEditName !== senderNames.yourName
+      )) {
+        resetName();
+    }
+  });
 
   // TODO: Implement and apply update mode views
   return (
     <View style={styles.senderSelector}>
       {
         (currentMode === 'UPDATE') ? (
-          <Pressable
-            style={styles.selectorButton}
-            onPress={() => {
-              convertSender('opponent');
+          <TextInput
+            style={{
+              ...styles.selectorButton,
+              ...styles.editName
             }}
-          >
-            <Text style={{
-              ...styles.selectorText,
-              ...(isOpponentActive ? styles.active : {})
-            }}>
-              Opponent
-            </Text>
-          </Pressable>
+            value={status.opponentEditName}
+            onChangeText={(payload) => {
+              onChangeText('opponent', payload);
+            }}
+            onSubmitEditing={() => {
+              updateName('opponent', status.opponentEditName);
+            }}
+          />
         ) : (
           <Pressable
             style={styles.selectorButton}
@@ -85,7 +131,7 @@ export default function SenderSelector() {
               ...styles.selectorText,
               ...(isOpponentActive ? styles.active : {})
             }}>
-              Opponent
+              { senderNames.opponentName }
             </Text>
           </Pressable>
         )
@@ -93,19 +139,19 @@ export default function SenderSelector() {
 
       {
         (currentMode === 'UPDATE') ? (
-          <Pressable
-            style={styles.selectorButton}
-            onPress={() => {
-              convertSender('you');
+          <TextInput
+            style={{
+              ...styles.selectorButton,
+              ...styles.editName
             }}
-          >
-            <Text style={{
-              ...styles.selectorText,
-              ...(areYouActive ? styles.active : {})
-            }}>
-              You
-            </Text>
-          </Pressable>
+            value={status.yourEditName}
+            onChangeText={(payload) => {
+              onChangeText('you', payload);
+            }}
+            onSubmitEditing={() => {
+              updateName('you', status.yourEditName);
+            }}
+          />
         ) : (
           <Pressable
             style={styles.selectorButton}
@@ -117,7 +163,7 @@ export default function SenderSelector() {
               ...styles.selectorText,
               ...(areYouActive ? styles.active : {})
             }}>
-              You
+              { senderNames.yourName }
             </Text>
           </Pressable>
         )
@@ -143,5 +189,9 @@ const styles = StyleSheet.create({
   },
   active: {
     color: 'black'
+  },
+  editName: {
+    fontSize: 24,
+    textDecorationLine: 'underline'
   }
 });
