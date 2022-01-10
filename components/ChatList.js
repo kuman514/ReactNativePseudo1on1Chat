@@ -6,6 +6,9 @@ import {
 import { useSelector } from 'react-redux';
 
 import Chat from './Chat';
+import {
+  setRef
+} from './ChatScroll';
 
 export default function ChatList() {
   const chatIdSelector = (state) => {
@@ -14,7 +17,12 @@ export default function ChatList() {
   const chatIds = useSelector(chatIdSelector);
 
   return (
-    <ScrollView style={styles.chatList}>
+    <ScrollView
+      ref={(ref) => {
+        setRef(ref);
+      }}
+      style={styles.chatList}
+    >
       <View style={styles.chatCommon}>
         {
           chatIds.map((chatId) => {
