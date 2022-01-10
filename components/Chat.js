@@ -168,6 +168,7 @@ export default function Chat(props) {
                   ...styles.messageText,
                   ...styles.editText
                 }}
+                multiline
                 value={status.editText}
                 onChangeText={onChangeText}
                 onSubmitEditing={() => {
@@ -183,7 +184,7 @@ export default function Chat(props) {
         </View>
         <View style={styles.timestamp}>
           <Text>
-            { `${MONTHS[month]} ${day} ${year}, ${hour}:${minute}:${second}` }
+            { `${MONTHS[month]} ${day} ${year}, ${hour}:${minute}` }
           </Text>
           {
             renderModeIcon(currentMode, props.id)
@@ -206,7 +207,8 @@ const styles = StyleSheet.create({
   },
   message: {
     padding: 10,
-    borderRadius: 5
+    borderRadius: 5,
+    flex: 1
   },
   messageText: {
     fontSize: 20
