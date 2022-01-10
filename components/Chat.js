@@ -211,10 +211,10 @@ const styles = StyleSheet.create({
   message: {
     padding: 10,
     borderRadius: 5,
-    maxWidth: '72%'
+    maxWidth: '67%'
   },
   messageText: {
-    fontSize: 20
+    fontSize: 18
   },
   editText: {
     textDecorationLine: 'underline'
