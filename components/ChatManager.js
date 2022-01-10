@@ -9,6 +9,10 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import {
+  scrollToTheEnd
+} from './ChatScroll';
+
 export default function ChatManager() {
   const [status, setStatus] = useState({
     chatInput: ''
@@ -36,6 +40,7 @@ export default function ChatManager() {
       ...status,
       chatInput: ''
     });
+    scrollToTheEnd();
   };
 
   const onChangeMode = (mode) => {
