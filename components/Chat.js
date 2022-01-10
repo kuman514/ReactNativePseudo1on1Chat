@@ -107,7 +107,7 @@ export default function Chat(props) {
           >
             <Ionicons
               name="build-outline"
-              size={24}
+              size={30}
               color="black"
             />
           </Pressable>
@@ -124,7 +124,7 @@ export default function Chat(props) {
           >
             <Ionicons
               name="trash-outline"
-              size={24}
+              size={30}
               color="black"
             />
           </Pressable>
@@ -183,8 +183,11 @@ export default function Chat(props) {
           }
         </View>
         <View style={styles.timestamp}>
-          <Text>
-            { `${MONTHS[month]} ${day} ${year}, ${hour}:${minute}` }
+          <Text style={(areYouSender ? styles.yourTimestamp : {})}>
+            { `${hour}:${minute}` }
+          </Text>
+          <Text style={(areYouSender ? styles.yourTimestamp : {})}>
+            { `${MONTHS[month]} ${day} ${year}` }
           </Text>
           {
             renderModeIcon(currentMode, props.id)
@@ -208,7 +211,7 @@ const styles = StyleSheet.create({
   message: {
     padding: 10,
     borderRadius: 5,
-    flex: 1
+    maxWidth: '72%'
   },
   messageText: {
     fontSize: 20
@@ -217,13 +220,17 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline'
   },
   timestamp: {
-    flexDirection: 'column-reverse'
+    flexDirection: 'column-reverse',
+    marginHorizontal: 10
   },
   yourChat: {
     flexDirection: 'row-reverse'
   },
   yourMessage: {
     backgroundColor: 'yellow'
+  },
+  yourTimestamp: {
+    textAlign: 'right'
   },
   opponentChat: {
     flexDirection: 'row'
