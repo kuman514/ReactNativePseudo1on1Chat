@@ -27,6 +27,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "Making a psuedo 1-on-1 chat app using React Native",
+    "githubUrl": "https://github.com/kuman514/ReactNativePseudo1on1Chat"
   }
 }
